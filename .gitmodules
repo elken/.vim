@@ -46,3 +46,6 @@
 [submodule "bundle/gundo.vim"]
 	path = bundle/gundo.vim
 	url = https://github.com/sjl/gundo.vim
+[submodule "bundle/echodoc.vim"]
+	path = bundle/echodoc.vim
+	url = https://github.com/Shougo/echodoc.vim
