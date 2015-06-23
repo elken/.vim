@@ -138,20 +138,19 @@
 	path = bundle/nerdtree-git-plugin
 	url = https://github.com/Xuyuanp/nerdtree-git-plugin
         ignore = dirty
-[submodule "bundle/vimwiki"]
-	path = bundle/vimwiki
-	url = https://github.com/vimwiki/vimwiki
-        ignore = dirty
-	branch = dev
 [submodule "bundle/vim-bufferline"]
 	path = bundle/vim-bufferline
 	url = https://github.com/bling/vim-bufferline
+        ignore = dirty
 [submodule "bundle/vim-obsession"]
 	path = bundle/vim-obsession
 	url = https://github.com/tpope/vim-obsession
+        ignore = dirty
 [submodule "bundle/vim-repeat"]
 	path = bundle/vim-repeat
 	url = https://github.com/tpope/vim-repeat
+        ignore = dirty
 [submodule "bundle/vim-windowsnap"]
 	path = bundle/vim-windowsnap
 	url = https://github.com/wesQ3/vim-windowswap
+        ignore = dirty
