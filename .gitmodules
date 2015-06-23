@@ -88,3 +88,6 @@
 [submodule "bundle/YouCompleteMe"]
 	path = bundle/YouCompleteMe
 	url = https://github.com/Valloric/YouCompleteMe
+[submodule "bundle/vim-cmake"]
+	path = bundle/vim-cmake
+	url = https://github.com/vhdirk/vim-cmake
