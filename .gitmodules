@@ -152,3 +152,6 @@
 [submodule "bundle/vim-repeat"]
 	path = bundle/vim-repeat
 	url = https://github.com/tpope/vim-repeat
+[submodule "bundle/vim-windowsnap"]
+	path = bundle/vim-windowsnap
+	url = https://github.com/wesQ3/vim-windowswap
