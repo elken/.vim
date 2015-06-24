@@ -154,3 +154,8 @@
 	path = bundle/vim-windowsnap
 	url = https://github.com/wesQ3/vim-windowswap
         ignore = dirty
+[submodule "bundle/vim-windowswap"]
+	path = bundle/vim-windowswap
+	url = https://github.com/wesQ3/vim-windowswap
+	branch = master
+	ignore = dirty
