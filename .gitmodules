@@ -159,3 +159,8 @@
 	url = https://github.com/wesQ3/vim-windowswap
 	branch = master
 	ignore = dirty
+[submodule "bundle/limelight.vim"]
+	path = bundle/limelight.vim
+	url = https://github.com/junegunn/limelight.vim
+	branch = master
+	ignore = dirty

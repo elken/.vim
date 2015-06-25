@@ -896,6 +896,8 @@ if has('nvim')
     tnoremap <C-j> <C-\><C-n><C-w>j
     tnoremap <C-k> <C-\><C-n><C-w>k
     tnoremap <C-l> <C-\><C-n><C-w>l
+    nnoremap <C-t>s :sp term://zsh<CR>a
+    nnoremap <C-t>v :vsp term://zsh<CR>a
 endif
 "}}}
 " TODO (At some point I may invest in a plugin for this) ------------------ {{{
