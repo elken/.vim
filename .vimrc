@@ -321,11 +321,7 @@ nnoremap <F11> :CMake<CR>:Make<CR>
 
 " Fuck XOFF
 noremap  <C-s> :w<cr>    
-inoremap <C-s> <esc>:w<cr>i
 noremap  <C-q> :w<cr>:Bdelete<cr>
-inoremap <C-q> <esc>:w<cr>:Bdelete<cr>
-noremap  <C-S-q> :q!<cr>
-inoremap <C-S-q> <esc>:q!<cr>
 
 " Stop it, hash key.
 inoremap # X<BS>#
