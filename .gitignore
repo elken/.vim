@@ -1,5 +1,6 @@
 tmp/
 view/
 doc/tags
+sessions/
 *~
 .netrwhist

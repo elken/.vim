@@ -217,6 +217,10 @@ vnoremap <leader>H :Gbrowse<cr>
 nnoremap <F5> :GundoToggle<CR>
 
 " }}}
+" Limelight {{{
+let g:limelight_conceal_ctermbg = 'gray'
+let g:limelight_conceal_ctermfg = 'gray'
+" }}}
 " NERDTree {{{
 nnoremap <F2> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
@@ -318,8 +322,8 @@ nnoremap <F11> :CMake<CR>:Make<CR>
 " Fuck XOFF
 noremap  <C-s> :w<cr>    
 inoremap <C-s> <esc>:w<cr>i
-noremap  <C-q> :w<cr>:bw<cr>
-inoremap <C-q> <esc>:w<cr>:bw<cr>
+noremap  <C-q> :w<cr>:Bdelete<cr>
+inoremap <C-q> <esc>:w<cr>:Bdelete<cr>
 noremap  <C-S-q> :q!<cr>
 inoremap <C-S-q> <esc>:q!<cr>
 
