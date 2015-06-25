@@ -2,6 +2,7 @@
 " Some snippets courtesy of Steve Losh, Tim Pope, Drew Neil, and random junk fom vim wiki
 
 " Preamble ---------------------------------------------------------------- {{{
+set nocompatible
 execute pathogen#infect()
 syntax on
 filetype plugin indent on                   " required!
@@ -24,6 +25,7 @@ set visualbell
 set ttyfast
 set ruler
 set backspace=indent,eol,start
+set backspace=2
 " Setting both causes hybrid lines
 set number
 set relativenumber
@@ -42,7 +44,6 @@ set title
 set linebreak
 set dictionary=/usr/share/dict/words
 set spellfile=~/.vim/custom-dictionary.utf-8.add
-set t_Co=256
 set write
 
 
@@ -156,6 +157,7 @@ endif
 " Color scheme and GUI ---------------------------------------------------- {{{
 
 set background=light
+let g:solarized_termcolors=256
 set t_co=256
 colorscheme solarized 
 set guifont=Meslo\ LG\ M\ for\ Powerline\ 8
@@ -220,6 +222,7 @@ nnoremap <F5> :GundoToggle<CR>
 " Limelight {{{
 let g:limelight_conceal_ctermbg = 'gray'
 let g:limelight_conceal_ctermfg = 'gray'
+nnoremap <leader>l :Limelight!!<CR>
 " }}}
 " NERDTree {{{
 nnoremap <F2> :NERDTreeToggle<CR>
@@ -309,12 +312,10 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 
 " Fuck you in the dick :bdelete
 nnoremap <Leader>q :Bdelete<CR>
+nnoremap <C-x> :Bdelete<CR>:q<CR>
 
 " Source my vimrc (Remember coders are lazy)
 nnoremap <F1> :w<CR>:so %<CR>
-
-" Fed up of typing 5 characters (Coders = lazy)
-nnoremap <Leader>h :set hls!<CR>
 
 " Quick build
 nnoremap <F11> :CMake<CR>:Make<CR>
