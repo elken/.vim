@@ -1,13 +1,18 @@
 " elken's .vimrc
 " Some snippets courtesy of Steve Losh, Tim Pope, Drew Neil, and random junk fom vim wiki
 
-" Preamble ---------------------------------------------------------------- {{{
+" Preamble                                                                      {{{               
+" Install vim-plug if it's missing
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
 set nocompatible
-execute pathogen#infect()
 syntax on
 filetype plugin indent on                   " required!
 " }}}
-" Basic options ----------------------------------------------------------- {{{
+" Basic options                                                                 {{{
 " Pretty self-explanatory
 
 set regexpengine=2
@@ -73,7 +78,7 @@ au VimResized * :wincmd =
 let mapleader = ","
 let maplocalleader = "\\"
 
-" cpoptions+=J, dammit {{{
+" cpoptions+=J, dammit                                                          {{{
 
 " Something occasionally removes this.  If I manage to find it I'm going to
 " comment out the line and replace all its characters with 'FUCK'.
@@ -83,7 +88,7 @@ augroup twospace
 augroup END
 
 " }}}
-" Wildmenu completion {{{
+" Wildmenu completion                                                           {{{
 
 set wildmenu
 set wildmode=list:longest
@@ -107,7 +112,7 @@ set wildignore+=classes
 set wildignore+=lib
 
 " }}}
-" Line Return {{{
+" Line Return                                                                   {{{
 
 " Make sure Vim returns to the same line when you reopen a file.
 " Thanks, Amit
@@ -120,7 +125,7 @@ augroup line_return
 augroup END
 
 " }}}
-" Tabs, spaces, wrapping {{{
+" Tabs, spaces, wrapping                                                        {{{
 
 set tabstop=8
 set shiftwidth=4
@@ -131,7 +136,7 @@ set textwidth=80
 set formatoptions=qrn1
 
 " }}}
-" Backups {{{
+" Backups                                                                       {{{
 
 set backup                        " enable backups
 set noswapfile                    " it's 2013, Vim.
@@ -154,7 +159,61 @@ endif
 " }}}
 
 " }}}
-" Color scheme and GUI ---------------------------------------------------- {{{
+" Vim-plug                                                                      {{{
+call plug#begin("~/.vim/bundle")
+" Build functions                                                               {{{
+function! BuildYCM(info)
+    if a:info.status == 'installed' || a:info.force
+        !./install.sh --clang-completer --omnisharp-completer
+    endif
+endfunction
+" }}}
+
+Plug 'airblade/vim-gitgutter' 
+Plug 'bling/vim-airline' 
+Plug 'bling/vim-bufferline' 
+Plug 'chrisbra/color_highlight' 
+Plug 'chrisbra/NrrwRgn' 
+Plug 'itchyny/calendar.vim' 
+Plug 'jceb/vim-orgmode' 
+Plug 'jiangmiao/auto-pairs' 
+Plug 'junegunn/limelight.vim' 
+Plug 'kien/rainbow_parentheses.vim' 
+Plug 'majutsushi/tagbar'
+Plug 'mattn/gist-vim' 
+Plug 'mattn/webapi-vim' 
+Plug 'mhinz/vim-startify' 
+Plug 'moll/vim-bbye' 
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic' 
+Plug 'Shougo/echodoc.vim' 
+Plug 'Shougo/unite.vim' 
+Plug 'Shougo/vimproc' 
+Plug 'simnalamburt/vim-mundo'
+Plug 'terryma/vim-multiple-cursors' 
+Plug 'tpope/vim-commentary' 
+Plug 'tpope/vim-dispatch' 
+Plug 'tpope/vim-endwise' 
+Plug 'tpope/vim-eunuch' 
+Plug 'tpope/vim-fugitive' 
+Plug 'tpope/vim-obsession' 
+Plug 'tpope/vim-repeat' 
+Plug 'tpope/vim-speeddating' 
+Plug 'tpope/vim-surround' 
+Plug 'tpope/vim-vinegar' 
+Plug 'tsaleh/vim-align' 
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+Plug 'vhdirk/vim-cmake', { 'for': 'cpp' }
+Plug 'vim-scripts/greplace.vim' 
+Plug 'vim-scripts/SyntaxRange' 
+Plug 'vim-scripts/utl.vim' 
+Plug 'wesQ3/vim-windowswap' 
+Plug 'Xuyuanp/nerdtree-git-plugin' 
+
+call plug#end()
+
+" }}}
+" Color scheme and GUI                                                          {{{
 
 set background=light
 let g:solarized_termcolors=256
@@ -178,20 +237,20 @@ endif
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " }}}
-" Plugin settings --------------------------------------------------------- {{{
-" Auto-Pairs {{{
+" Plugin settings                                                               {{{
+" Auto-Pairs                                                                    {{{
 let g:AutoPairsFlyMode = 0
-let g:AutoPairsShortcutBackInsert = '<M-b>'
+let g:AutoPairsShortcutBackInsert = '<C-b>'
 "}}}
-" Calendar.vim {{{
+" Calendar.vim                                                                  {{{
 let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
 let g:calendar_task = 1
 "}}}
-" color_highlight {{{
+" color_highlight                                                               {{{
 nnoremap <F7> :ColorHighlight<CR>
 " }}}
-" Fugitive {{{
+" Fugitive                                                                      {{{
 
 nnoremap <leader>gd :Gdiff<cr>
 nnoremap <leader>gs :Gstatus<cr>
@@ -214,21 +273,21 @@ nnoremap <leader>H :Gbrowse<cr>
 vnoremap <leader>H :Gbrowse<cr>
 
 " }}}
-" Gundo {{{
+" Gundo                                                                         {{{
 
 nnoremap <F5> :GundoToggle<CR>
 
 " }}}
-" Limelight {{{
+" Limelight                                                                     {{{
 let g:limelight_conceal_ctermbg = 'gray'
 let g:limelight_conceal_ctermfg = 'gray'
 nnoremap <leader>l :Limelight!!<CR>
 " }}}
-" NERDTree {{{
+" NERDTree                                                                      {{{
 nnoremap <F2> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " }}}
-" Startify {{{
+" Startify                                                                      {{{
 
 let g:startify_files_number = 5
 let g:startify_enable_special = 0
@@ -250,10 +309,10 @@ let g:startify_bookmarks = [
             \ '~/.st/config.h'
             \ ]
 " }}}
-" Tagbar {{{
+" Tagbar                                                                        {{{
 nnoremap <F9> :TagbarToggle<CR>
 " }}}
-" Unite {{{
+" Unite                                                                         {{{
 nnoremap <leader>s :Unite file_rec/async<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 let g:unite_source_history_yank_enable = 1
@@ -261,7 +320,7 @@ nnoremap <leader>y :Unite history/yank<cr>
 nnoremap <leader>b :Unite -quick-match buffer<cr>
 
 "}}}
-" vim-airline {{{
+" vim-airline                                                                   {{{
 " GitGutter stuff
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#hunks#non_zero_only = 0
@@ -282,7 +341,7 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
 let g:bufferline_echo = 0
 " }}}
-" vim-gitgutter {{{
+" vim-gitgutter                                                                 {{{
 let g:gitgutter_sign_column_always = 0
 let g:gitgutter_sign_added = '++'
 let g:gitgutter_sign_modified = '~~'
@@ -291,11 +350,11 @@ let g:gitgutter_sign_removed_first_line = '@@'
 let g:gitgutter_sign_modified_removed = 'mr'
 
 " }}}
-" vim-session {{{
+" vim-session                                                                   {{{
 let g:session_autosave = 'no'
 let g:session_autoload = 'no'
 " }}}
-" YouCompleteMe {{{
+" YouCompleteMe                                                                 {{{
  
 "let g:ycm_key_list_select_completion=[]
 "let g:ycm_key_list_previous_completion=[]
@@ -308,7 +367,7 @@ let g:ycm_server_log_level = "debug"
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 "}}}  
 " }}}
-" Convenience mappings ---------------------------------------------------- {{{
+" Convenience mappings                                                          {{{
 
 " Fuck you in the dick :bdelete
 nnoremap <Leader>q :Bdelete<CR>
@@ -421,7 +480,7 @@ nnoremap U :syntax sync fromstart<cr>:redraw!<cr>
 " Cd to current open file
 nnoremap <leader>cd :cd %:p:h<cr>
 
-" Easy filetype switching {{{
+" Easy filetype switching                                                       {{{
 
 nnoremap _d   :set ft=diff<CR>
 nnoremap _c   :set ft=c<CR>
@@ -430,15 +489,14 @@ nnoremap _sh  :set ft=sh<CR>
 " }}}
 
 " }}}
-" Quick editing ----------------------------------------------------------- {{{
+" Quick editing                                                                 {{{
 
 nnoremap <leader>ev :vsplit ~/.vimrc<cr>
-nnoremap <leader>ed :vsplit ~/.vim/custom-dictionary.utf-8.add<cr>
 nnoremap <leader>ey :vsplit ~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<cr>
 nnoremap <leader>ez :vsplit ~/.zshrc<CR>
 nnoremap <leader>ew :vsplit ~/notes/index.md<CR>
 " }}}
-" Searching and movement -------------------------------------------------- {{{
+" Searching and movement                                                        {{{
 
 " Use sane regexes.
 nnoremap / /\v
@@ -513,7 +571,7 @@ nnoremap Vat vatV
 nnoremap Vab vabV
 nnoremap VaB vaBV
 
-" Directional Keys {{{
+" Directional Keys                                                              {{{
 
 " It's 2013.
 noremap j gj
@@ -534,7 +592,7 @@ nnoremap ; :
 nnoremap : ;
 
 " }}}
-" Visual Mode */# from Scrooloose {{{
+" Visual Mode */# from Scrooloose                                               {{{
 
 function! s:VSetSearch()
   let temp = @@
@@ -547,7 +605,7 @@ vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
 vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 
 " }}}
-" List navigation {{{
+" List navigation                                                               {{{
 
 nnoremap <left>  :cprev<cr>zvzz
 nnoremap <right> :cnext<cr>zvzz
@@ -557,7 +615,7 @@ nnoremap <down>  :lnext<cr>zvzz
 " }}}
 
 " }}}
-" Folding ----------------------------------------------------------------- {{{
+" Folding                                                                       {{{
 
 set foldlevelstart=0
 
@@ -565,42 +623,22 @@ set foldlevelstart=0
 nnoremap <Space> za
 vnoremap <Space> za
 
-" Make zO recursively open whatever top level fold we're in, no matter where the
-" cursor happens to be.
-nnoremap zO zCzO
-
-" "Focus" the current line.  Basically:
-"
-" 1. Close all folds.
-" 2. Open just the folds containing the current line.
-" 3. Move the line to a little bit (15 lines) above the center of the screen.
-" 4. Pulse the cursor line.  My eyes are bad.
-"
-" This mapping wipes out the z mark, which I never use.
-"
-" I use :sus for the rare times I want to actually background Vim.
-nnoremap <c-f> mzzMzvzz15<c-e>`z<cr>
-
-function! MyFoldText() " {{{
-    let line = getline(v:foldstart)
-
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
-    let foldedlinecount = v:foldend - v:foldstart
-
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
-
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
-endfunction " }}}
+function! MyFoldText()                                                          "{{{
+    " let &l:fillchars = substitute(&l:fillchars,',\?fold:.','','gi')
+    let l:numwidth = 8
+    let l:foldtext = '| '.(v:foldend-v:foldstart).' lines folded'
+    let l:endofline = &textwidth+strlen(l:foldtext)
+    let l:linetext = strpart(getline(v:foldstart),0,l:endofline-strlen(l:foldtext))
+    let l:align = l:endofline-strlen(l:linetext)
+    setlocal fillchars=" "
+    return printf('%s%*s', l:linetext, l:align, l:foldtext)
+  endfunction
+"}}}
 set foldtext=MyFoldText()
 
 " }}}
-" Filetype-specific ------------------------------------------------------- {{{
-" All {{{
+" Filetype-specific                                                             {{{
+" All                                                                           {{{
     au FileType * RainbowParenthesesActivate
     au CursorMovedI * if pumvisible() == 0|pclose|endif
     au InsertLeave * if pumvisible() == 0|pclose|endif
@@ -613,7 +651,7 @@ set foldtext=MyFoldText()
     au BufEnter * silent! lcd %:p:h
 
 " }}}
-" C {{{
+" C                                                                             {{{
 
 augroup ft_c
     au!
@@ -621,7 +659,7 @@ augroup ft_c
 augroup END
 
 " }}}
-" C++ {{{
+" C++                                                                           {{{
 
 augroup ft_cpp
     au!
@@ -629,7 +667,7 @@ augroup ft_cpp
 augroup END
 
 " }}}
-" Firefox {{{
+" Firefox                                                                       {{{
 
 augroup ft_firefox
     au!
@@ -637,7 +675,7 @@ augroup ft_firefox
 augroup END
 
 " }}}
-" Haskell {{{
+" Haskell                                                                       {{{
 
 augroup ft_haskell
     au!
@@ -645,7 +683,7 @@ augroup ft_haskell
 augroup END
 
 " }}}
-" Lua {{{
+" Lua                                                                           {{{
 au BufReadCmd *.love call zip#Browse(expand("<amatch>"))
 
 function! SetLovePrefs()
@@ -662,10 +700,10 @@ endfunction
 autocmd FileType lua call SetLovePrefs()
 autocmd FileType lua nnoremap <F12> :call LoveRun()<CR>
 " }}}
-" Makefle {{{
+" Makefle                                                                       {{{
 autocmd FileType make setlocal noexpandtab
 "}}}
-" Mail {{{
+" Mail                                                                          {{{
 
 augroup ft_mail
     au!
@@ -674,7 +712,7 @@ augroup ft_mail
 augroup END
 
 " }}}
-" Markdown {{{
+" Markdown                                                                      {{{
 
 augroup ft_markdown
     au!
@@ -687,7 +725,7 @@ augroup ft_markdown
 augroup END
 
 " }}}
-" Mutt {{{
+" Mutt                                                                          {{{
 
 augroup ft_muttrc
     au!
@@ -698,7 +736,7 @@ augroup ft_muttrc
 augroup END
 
 " }}}
-" Org {{{
+" Org                                                                           {{{
 
 augroup ft_org
     au! 
@@ -706,7 +744,7 @@ augroup ft_org
 
 augroup END
 "}}}
-" Python {{{
+" Python                                                                        {{{
 
 augroup ft_python
     au!
@@ -727,17 +765,27 @@ augroup ft_python
 augroup END
 
 " }}}
-" Shell {{{
+" Shell                                                                         {{{
 
 augroup ft_shell
     au FileType sh set foldmethod=marker
 augroup END
 " }}}
-" TeX {{{
+" Standard In {{{
+
+augroup ft_stdin
+    au!
+
+    " Treat buffers from stdin (e.g.: echo foo | vim -) as scratch.
+    au StdinReadPost * :set buftype=nofile
+augroup END
+
+" }}}
+" TeX                                                                           {{{
 let g:tex_flavor='latex'
 
 " }}}
-" Vim {{{
+" Vim                                                                           {{{
 
 augroup ft_vim
     au!
@@ -749,9 +797,8 @@ augroup END
 
 " }}}
 " }}}
-" Text objects ------------------------------------------------------------ {{{
-
-" Next and Last {{{
+" Text objects                                                                  {{{
+" Next and Last                                                                 {{{
 "
 " Motion for "next/last object".  "Last" here means "previous", not "final".
 " Unfortunately the "p" motion was already taken for paragraphs.
@@ -888,9 +935,8 @@ function! s:NextTextObject(motion, dir)
 endfunction
 
 " }}}
-
 " }}}
-" nvim stuff -------------------------------------------------------------- {{{
+" nvim stuff                                                                    {{{
 if has('nvim')
     tnoremap <Esc> <C-\><C-n>
     tnoremap <C-h> <C-\><C-n><C-w>h
@@ -901,7 +947,127 @@ if has('nvim')
     nnoremap <C-t>v :vsp term://zsh<CR>a
 endif
 "}}}
-" TODO (At some point I may invest in a plugin for this) ------------------ {{{
+" Mini-plugins                                                                  {{{
+" Nyan! {{{
+
+function! NyanMe() " {{{
+    hi NyanFur             guifg=#BBBBBB
+    hi NyanPoptartEdge     guifg=#ffd0ac
+    hi NyanPoptartFrosting guifg=#fd3699 guibg=#fe98ff
+    hi NyanRainbow1        guifg=#6831f8
+    hi NyanRainbow2        guifg=#0099fc
+    hi NyanRainbow3        guifg=#3cfa04
+    hi NyanRainbow4        guifg=#fdfe00
+    hi NyanRainbow5        guifg=#fc9d00
+    hi NyanRainbow6        guifg=#fe0000
+
+
+    echohl NyanRainbow1
+    echon "≈"
+    echohl NyanRainbow2
+    echon "≋"
+    echohl NyanRainbow3
+    echon "≈"
+    echohl NyanRainbow4
+    echon "≋"
+    echohl NyanRainbow5
+    echon "≈"
+    echohl NyanRainbow6
+    echon "≋"
+    echohl NyanRainbow1
+    echon "≈"
+    echohl NyanRainbow2
+    echon "≋"
+    echohl NyanRainbow3
+    echon "≈"
+    echohl NyanRainbow4
+    echon "≋"
+    echohl NyanRainbow5
+    echon "≈"
+    echohl NyanRainbow6
+    echon "≋"
+    echohl None
+    echo ""
+
+    echohl NyanRainbow1
+    echon "≈"
+    echohl NyanRainbow2
+    echon "≋"
+    echohl NyanRainbow3
+    echon "≈"
+    echohl NyanRainbow4
+    echon "≋"
+    echohl NyanRainbow5
+    echon "≈"
+    echohl NyanRainbow6
+    echon "≋"
+    echohl NyanRainbow1
+    echon "≈"
+    echohl NyanRainbow2
+    echon "≋"
+    echohl NyanRainbow3
+    echon "≈"
+    echohl NyanRainbow4
+    echon "≋"
+    echohl NyanRainbow5
+    echon "≈"
+    echohl NyanRainbow6
+    echon "≋"
+    echohl NyanFur
+    echon "╰"
+    echohl NyanPoptartEdge
+    echon "⟨"
+    echohl NyanPoptartFrosting
+    echon "⣮⣯⡿"
+    echohl NyanPoptartEdge
+    echon "⟩"
+    echohl NyanFur
+    echon "⩾^ω^⩽"
+    echohl None
+    echo ""
+
+    echohl NyanRainbow1
+    echon "≈"
+    echohl NyanRainbow2
+    echon "≋"
+    echohl NyanRainbow3
+    echon "≈"
+    echohl NyanRainbow4
+    echon "≋"
+    echohl NyanRainbow5
+    echon "≈"
+    echohl NyanRainbow6
+    echon "≋"
+    echohl NyanRainbow1
+    echon "≈"
+    echohl NyanRainbow2
+    echon "≋"
+    echohl NyanRainbow3
+    echon "≈"
+    echohl NyanRainbow4
+    echon "≋"
+    echohl NyanRainbow5
+    echon "≈"
+    echohl NyanRainbow6
+    echon "≋"
+    echohl None
+    echon " "
+    echohl NyanFur
+    echon "”   ‟"
+    echohl None
+
+    sleep 1
+    redraw
+    echo " "
+    echo " "
+    echo "Noms?"
+    redraw
+endfunction " }}}
+command! NyanMe call NyanMe()
+
+" }}}
+" }}}
+" TODO (At some point I may invest in a plugin for this)                        {{{
 " - Use Abolish
 " - Plan my awesome keymap plugin thing
 " - Devise a nice way to handle everything (projects, settings, etc)
