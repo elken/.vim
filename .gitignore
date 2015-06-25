@@ -1,6 +1,6 @@
 tmp/
 view/
-doc/tags
+bundle/
 sessions/
 *~
 .netrwhist
