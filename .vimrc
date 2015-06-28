@@ -167,23 +167,42 @@ function! BuildYCM(info)
         !./install.sh --clang-completer --omnisharp-completer
     endif
 endfunction
+
+function! BuildOmnisharp(info)
+    if a:info.status == 'installed' || a:info.force
+        cd server
+        !xbuild
+    endif
+endfunction
 " }}}
+" Options {{{
+let g:plug_window = "bel new"
+let g:plug_quit = "Q"
+"}}}
 
 Plug 'airblade/vim-gitgutter' 
+Plug 'benekastah/neomake'
 Plug 'bling/vim-airline' 
 Plug 'bling/vim-bufferline' 
 Plug 'chrisbra/color_highlight' 
 Plug 'chrisbra/NrrwRgn' 
+Plug 'chrisbra/unicode.vim'
+Plug 'critiqjo/lldb.nvim'
+Plug 'critiqjo/vim-autoclose'
+Plug 'elken/promptline.vim', { 'dir': '~/src/vim/promptline.vim' }
 Plug 'itchyny/calendar.vim' 
 Plug 'jceb/vim-orgmode' 
 Plug 'jiangmiao/auto-pairs' 
 Plug 'junegunn/limelight.vim' 
-Plug 'kien/rainbow_parentheses.vim' 
+Plug 'junegunn/rainbow_parentheses.vim' 
+Plug 'junegunn/vim-easy-align'
+Plug 'kopischke/unite-spell-suggest'
 Plug 'majutsushi/tagbar'
 Plug 'mattn/gist-vim' 
 Plug 'mattn/webapi-vim' 
 Plug 'mhinz/vim-startify' 
 Plug 'moll/vim-bbye' 
+Plug 'OmniSharp/omnisharp-vim', { 'do': function('BuildOmnisharp') }
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' 
 Plug 'Shougo/echodoc.vim' 
@@ -204,6 +223,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'tsaleh/vim-align' 
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'vhdirk/vim-cmake', { 'for': 'cpp' }
+Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
 Plug 'vim-scripts/greplace.vim' 
 Plug 'vim-scripts/SyntaxRange' 
 Plug 'vim-scripts/utl.vim' 
@@ -273,19 +293,29 @@ nnoremap <leader>H :Gbrowse<cr>
 vnoremap <leader>H :Gbrowse<cr>
 
 " }}}
-" Gundo                                                                         {{{
-
-nnoremap <F5> :GundoToggle<CR>
-
-" }}}
 " Limelight                                                                     {{{
 let g:limelight_conceal_ctermbg = 'gray'
 let g:limelight_conceal_ctermfg = 'gray'
 nnoremap <leader>l :Limelight!!<CR>
 " }}}
+" Mundo                                                                         {{{
+
+nnoremap <F5> :GundoToggle<CR>
+
+" }}}
 " NERDTree                                                                      {{{
 nnoremap <F2> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+" }}}
+" Omnisharp                                                                     {{{
+let g:OmniSharp_selector_ui = "unite"
+" }}}
+" Promptline                                                                    {{{
+let g:promptline_preset = {
+     \'b':  [promptline#slices#user() ],
+     \'c':  [promptline#slices#cwd()],
+     \'x':  [promptline#slices#vcs_branch(), promptline#slices#git_status(), promptline#slices#jobs()],
+     \'warn': [promptline#slices#last_exit_code()]}
 " }}}
 " Startify                                                                      {{{
 
@@ -300,6 +330,7 @@ let g:startify_skiplist = [
             \ 'COMMIT_EDITMSG',
             \ $VIMRUNTIME .'/doc',
             \ 'bundle/.*/doc',
+            \ '.git/index',
             \ ]
 
 let g:startify_bookmarks = [ 
@@ -308,6 +339,9 @@ let g:startify_bookmarks = [
             \ '~/.dwm/config.h',
             \ '~/.st/config.h'
             \ ]
+" }}}
+" Syntastic                                                                     {{{
+let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
 " }}}
 " Tagbar                                                                        {{{
 nnoremap <F9> :TagbarToggle<CR>
@@ -341,6 +375,10 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
 let g:bufferline_echo = 0
 " }}}
+" vim-easy-align                                                                {{{
+vmap <Enter> <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+" }}}
 " vim-gitgutter                                                                 {{{
 let g:gitgutter_sign_column_always = 0
 let g:gitgutter_sign_added = '++'
@@ -353,6 +391,9 @@ let g:gitgutter_sign_modified_removed = 'mr'
 " vim-session                                                                   {{{
 let g:session_autosave = 'no'
 let g:session_autoload = 'no'
+" }}}
+" Windowswap                                                                    {{{
+nnoremap <leader>mw Windowswap#EasyWindowSwap
 " }}}
 " YouCompleteMe                                                                 {{{
  
@@ -369,12 +410,17 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 " }}}
 " Convenience mappings                                                          {{{
 
+" Convert a URL to vim-plug syntax
+nnoremap <leader>up 3cf/Plug '<Esc>$a'<Esc>
+
 " Fuck you in the dick :bdelete
 nnoremap <Leader>q :Bdelete<CR>
 nnoremap <C-x> :Bdelete<CR>:q<CR>
 
 " Source my vimrc (Remember coders are lazy)
 nnoremap <F1> :w<CR>:so %<CR>
+nnoremap <F3> :PlugInstall<CR>
+nnoremap <S-F3> :PlugClean<CR>
 
 " Quick build
 nnoremap <F11> :CMake<CR>:Make<CR>
@@ -418,8 +464,8 @@ nnoremap Vaa ggVG
 inoremap <C-u> <esc>mzg~iw`za
 
 " Formatting, TextMate-style
-nnoremap Q gqip
-vnoremap Q gq
+nnoremap <leader>Q gqip
+vnoremap <leader>Q gq
 
 " Reformat line.
 " I never use l as a macro register anyway.
@@ -515,7 +561,7 @@ set sidescrolloff=10
 
 set virtualedit+=block
 
-noremap <silent> <leader><space> :noh<cr>:call clearmatches()<cr>
+noremap <silent> <leader><space> :noh<cr>:let @/=""<cr>:echo "Search cleared."<cr>
 
 runtime macros/matchit.vim
 map <tab> %
@@ -639,12 +685,9 @@ set foldtext=MyFoldText()
 " }}}
 " Filetype-specific                                                             {{{
 " All                                                                           {{{
-    au FileType * RainbowParenthesesActivate
+    au FileType * RainbowParentheses
     au CursorMovedI * if pumvisible() == 0|pclose|endif
     au InsertLeave * if pumvisible() == 0|pclose|endif
-    au syntax * RainbowParenthesesLoadRound
-    au syntax * RainbowParenthesesLoadSquare
-    au syntax * RainbowParenthesesLoadBraces
 
     " Auto chdir because I'm very lazy and easily confused
     set autochdir
@@ -656,14 +699,33 @@ set foldtext=MyFoldText()
 augroup ft_c
     au!
     au FileType c setlocal foldmethod=marker foldmarker={,}
+    au BufWritePost c Neomake
 augroup END
 
+" }}}
+" C#                                                                            {{{
+augroup ft_csharp
+    au!
+    " Async build
+    au FileType cs nnoremap <leader>b :wa!<CR>:OmniSharpBuildAsync<CR>
+    " Update syntastic
+    au BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+    " Add .cs to proj on save
+    au BufWritePost *.cs call OmniSharp#AddToProject()
+    
+    au FileType cs nnoremap gd :OmniSharpGotoDefinition<CR>
+    au FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<CR>
+    au FileType cs nnoremap <leader>ft :OmniSharpFindType<CR>
+    au FileType cs nnoremap <leader>fs :OmniSharpFindSymbol<CR>
+
+augroup END
 " }}}
 " C++                                                                           {{{
 
 augroup ft_cpp
     au!
     au FileType cpp setlocal foldmethod=syntax foldmarker={,}
+    au BufWritePost cpp Neomake
 augroup END
 
 " }}}
@@ -771,7 +833,7 @@ augroup ft_shell
     au FileType sh set foldmethod=marker
 augroup END
 " }}}
-" Standard In {{{
+" Standard In                                                                   {{{
 
 augroup ft_stdin
     au!

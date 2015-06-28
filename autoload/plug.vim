@@ -604,7 +604,7 @@ function! s:prepare()
     silent %d _
   else
     call s:new_window()
-    nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>echo<bar>q<cr>
+    execute 'nnoremap <silent> <buffer> ' . get(g:, 'plug_quit', 'q') . ' :if b:plug_preview==1<bar>pc<bar>endif<bar>echo<bar>q<cr>'
     nnoremap <silent> <buffer> R  :silent! call <SID>retry()<cr>
     nnoremap <silent> <buffer> D  :PlugDiff<cr>
     nnoremap <silent> <buffer> S  :PlugStatus<cr>
@@ -719,7 +719,7 @@ endfunction
 function! s:update_impl(pull, force, args) abort
   let args = copy(a:args)
   let threads = (len(args) > 0 && args[-1] =~ '^[1-9][0-9]*$') ?
-                  \ remove(args, -1) : get(g:, 'plug_threads', s:is_win ? 1 : 16)
+                  \ remove(args, -1) : get(g:, 'Qplug_threads', s:is_win ? 1 : 16)
 
   let managed = filter(copy(g:plugs), 's:is_managed(v:key)')
   let todo = empty(args) ? filter(managed, '!v:val.frozen || !isdirectory(v:val.dir)') :
@@ -1036,7 +1036,7 @@ import subprocess
 import tempfile
 import threading as thr
 import time
-import traceback
+Qimport traceback
 import vim
 
 G_NVIM = vim.eval("has('nvim')") == '1'
