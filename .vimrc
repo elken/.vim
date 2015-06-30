@@ -2,6 +2,8 @@
 " Some snippets courtesy of Steve Losh, Tim Pope, Drew Neil, and random junk fom vim wiki
 
 " Preamble                                                                      {{{               
+" Set hostname
+let g:hostname = system('echo -n $(hostname)')
 " Install vim-plug if it's missing
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -9,8 +11,6 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall
 endif
 set nocompatible
-syntax on
-filetype plugin indent on                   " required!
 " }}}
 " Basic options                                                                 {{{
 " Pretty self-explanatory
@@ -186,9 +186,12 @@ Plug 'bling/vim-airline'
 Plug 'bling/vim-bufferline' 
 Plug 'chrisbra/color_highlight' 
 Plug 'chrisbra/NrrwRgn' 
+<<<<<<< HEAD
+=======
 Plug 'chrisbra/unicode.vim'
 Plug 'critiqjo/lldb.nvim'
 Plug 'critiqjo/vim-autoclose'
+>>>>>>> ae1c1c12d749fd4cb89bd5dd22e25af5ba11dfcb
 Plug 'elken/promptline.vim', { 'dir': '~/src/vim/promptline.vim' }
 Plug 'itchyny/calendar.vim' 
 Plug 'jceb/vim-orgmode' 
@@ -206,7 +209,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' 
 Plug 'Shougo/echodoc.vim' 
 Plug 'Shougo/unite.vim' 
-Plug 'Shougo/vimproc' 
+Plug 'Shougo/vimproc' , { 'do': 'make'}
 Plug 'simnalamburt/vim-mundo'
 Plug 'terryma/vim-multiple-cursors' 
 Plug 'tpope/vim-commentary' 
@@ -222,6 +225,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'tsaleh/vim-align' 
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'vhdirk/vim-cmake', { 'for': 'cpp' }
+Plug 'vim-scripts/auto_autoread'
 Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
 Plug 'vim-scripts/greplace.vim' 
 Plug 'vim-scripts/SyntaxRange' 
@@ -234,12 +238,18 @@ call plug#end()
 " }}}
 " Color scheme and GUI                                                          {{{
 
-set background=light
+if g:hostname == 'debtop'
+    set background=dark
+elseif g:hostname == 'archbox'
+    set background=light
+endif
+
 let g:solarized_termcolors=256
 set t_co=256
 colorscheme solarized 
-set guifont=Meslo\ LG\ M\ for\ Powerline\ 8
 if has('gui_running')
+    colorscheme material-theme
+    set guifont=Hasklig\ 8
     set go-=m
     set go-=T
     set go-=r
@@ -284,8 +294,13 @@ vnoremap <leader>H :Gbrowse<cr>
 
 " }}}
 " Limelight                                                                     {{{
-let g:limelight_conceal_ctermbg = 'gray'
-let g:limelight_conceal_ctermfg = 'gray'
+if &background == "dark"
+    let g:limelight_conceal_ctermbg = '240'
+    let g:limelight_conceal_ctermfg = '240'
+else
+    let g:limelight_conceal_ctermbg = 'grey'
+    let g:limelight_conceal_ctermfg = 'grey'
+endif
 nnoremap <leader>l :Limelight!!<CR>
 " }}}
 " Mundo                                                                         {{{
@@ -337,9 +352,9 @@ let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
 nnoremap <F9> :TagbarToggle<CR>
 " }}}
 " Unite                                                                         {{{
-nnoremap <leader>s :Unite file_rec/async<cr>
-nnoremap <leader>/ :Unite grep:.<cr>
 let g:unite_source_history_yank_enable = 1
+nnoremap <leader>f :Unite file_rec/async<cr>
+nnoremap <leader>/ :UniteWithCurrentDir grep<cr>
 nnoremap <leader>y :Unite history/yank<cr>
 nnoremap <leader>b :Unite -quick-match buffer<cr>
 
