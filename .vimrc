@@ -192,7 +192,6 @@ Plug 'critiqjo/vim-autoclose'
 Plug 'elken/promptline.vim', { 'dir': '~/src/vim/promptline.vim' }
 Plug 'itchyny/calendar.vim' 
 Plug 'jceb/vim-orgmode' 
-Plug 'jiangmiao/auto-pairs' 
 Plug 'junegunn/limelight.vim' 
 Plug 'junegunn/rainbow_parentheses.vim' 
 Plug 'junegunn/vim-easy-align'
@@ -258,15 +257,6 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " }}}
 " Plugin settings                                                               {{{
-" Auto-Pairs                                                                    {{{
-let g:AutoPairsFlyMode = 0
-let g:AutoPairsShortcutBackInsert = '<C-b>'
-"}}}
-" Calendar.vim                                                                  {{{
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
-let g:calendar_task = 1
-"}}}
 " color_highlight                                                               {{{
 nnoremap <F7> :ColorHighlight<CR>
 " }}}
