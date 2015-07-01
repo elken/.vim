@@ -186,12 +186,9 @@ Plug 'bling/vim-airline'
 Plug 'bling/vim-bufferline' 
 Plug 'chrisbra/color_highlight' 
 Plug 'chrisbra/NrrwRgn' 
-<<<<<<< HEAD
-=======
 Plug 'chrisbra/unicode.vim'
 Plug 'critiqjo/lldb.nvim'
 Plug 'critiqjo/vim-autoclose'
->>>>>>> ae1c1c12d749fd4cb89bd5dd22e25af5ba11dfcb
 Plug 'elken/promptline.vim', { 'dir': '~/src/vim/promptline.vim' }
 Plug 'itchyny/calendar.vim' 
 Plug 'jceb/vim-orgmode' 
@@ -238,17 +235,13 @@ call plug#end()
 " }}}
 " Color scheme and GUI                                                          {{{
 
-if g:hostname == 'debtop'
-    set background=dark
-elseif g:hostname == 'archbox'
-    set background=light
-endif
-
+set background=dark
 let g:solarized_termcolors=256
 set t_co=256
-colorscheme solarized 
+let g:enable_bold_font = 1
+colorscheme hybrid_reverse
 if has('gui_running')
-    colorscheme material-theme
+    colorscheme hybrid_material
     set guifont=Hasklig\ 8
     set go-=m
     set go-=T
