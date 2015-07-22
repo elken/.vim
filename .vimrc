@@ -235,13 +235,12 @@ call plug#end()
 " }}}
 " Color scheme and GUI                                                          {{{
 
-set background=dark
+set background=light
 let g:solarized_termcolors=256
 set t_co=256
 let g:enable_bold_font = 1
-colorscheme hybrid_reverse
+colorscheme solarized
 if has('gui_running')
-    colorscheme hybrid_material
     set guifont=Hasklig\ 8
     set go-=m
     set go-=T
@@ -307,13 +306,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 " }}}
 " Omnisharp                                                                     {{{
 let g:OmniSharp_selector_ui = "unite"
-" }}}
-" Promptline                                                                    {{{
-let g:promptline_preset = {
-     \'b':  [promptline#slices#user() ],
-     \'c':  [promptline#slices#cwd()],
-     \'x':  [promptline#slices#vcs_branch(), promptline#slices#git_status(), promptline#slices#jobs()],
-     \'warn': [promptline#slices#last_exit_code()]}
 " }}}
 " Startify                                                                      {{{
 
