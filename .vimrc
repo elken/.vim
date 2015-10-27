@@ -4,6 +4,10 @@
 " Preamble                                                                      {{{               
 " Set hostname
 let g:hostname = system('echo -n $(hostname)')
+
+" Set vim dir (neovim uses xdg now)
+let g:vim_dir = "/etc/xdg/nvim/"
+
 " Install vim-plug if it's missing
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -164,14 +168,7 @@ call plug#begin("~/.vim/bundle")
 " Build functions                                                               {{{
 function! BuildYCM(info)
     if a:info.status == 'installed' || a:info.force
-        !./install.sh --clang-completer --omnisharp-completer
-    endif
-endfunction
-
-function! BuildOmnisharp(info)
-    if a:info.status == 'installed' || a:info.force
-        cd server
-        !xbuild
+        !./install.py --clang-completer 
     endif
 endfunction
 " }}}
@@ -201,7 +198,6 @@ Plug 'mattn/gist-vim'
 Plug 'mattn/webapi-vim' 
 Plug 'mhinz/vim-startify' 
 Plug 'moll/vim-bbye' 
-Plug 'OmniSharp/omnisharp-vim', { 'do': function('BuildOmnisharp') }
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' 
 Plug 'Shougo/echodoc.vim' 
@@ -304,17 +300,14 @@ nnoremap <F5> :GundoToggle<CR>
 nnoremap <F2> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " }}}
-" Omnisharp                                                                     {{{
-let g:OmniSharp_selector_ui = "unite"
-" }}}
 " Startify                                                                      {{{
 
 let g:startify_files_number = 5
 let g:startify_enable_special = 0
-let g:startify_session_dir = '~/.vim/sessions'
+let g:startify_session_dir = g:vim_dir . 'sessions'
 
 let g:startify_custom_header = map(split(system('fortune -s | cowsay'), '\n'), '"   ". v:val') + ['','']  
-let g:startify_custom_footer = ['',''] + map(split(system('toilet -F border -f future Be VIMproved!'), '\n'), '"   ". v:val') + ['','']
+let g:startify_custom_footer = ['',''] + map(split(system('toilet -F border -f future Be NEOVIMproved!'), '\n'), '"   ". v:val') + ['','']
 
 let g:startify_skiplist = [
             \ 'COMMIT_EDITMSG',
@@ -324,7 +317,7 @@ let g:startify_skiplist = [
             \ ]
 
 let g:startify_bookmarks = [ 
-            \ '~/.vimrc', 
+            \ g:vim_dir . 'init.vim', 
             \ '~/.zshrc',
             \ '~/.dwm/config.h',
             \ '~/.st/config.h'
@@ -395,7 +388,7 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_server_log_level = "debug"
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = g:vim_dir . 'bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 "}}}  
 " }}}
 " Convenience mappings                                                          {{{
@@ -527,8 +520,8 @@ nnoremap _sh  :set ft=sh<CR>
 " }}}
 " Quick editing                                                                 {{{
 
-nnoremap <leader>ev :vsplit ~/.vimrc<cr>
-nnoremap <leader>ey :vsplit ~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<cr>
+nnoremap <leader>ev :vsplit /etc/xdg/nvim/init.vim<cr>
+nnoremap <leader>ey :vsplit /etc/xdg/nvim/init.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<cr>
 nnoremap <leader>ez :vsplit ~/.zshrc<CR>
 nnoremap <leader>ew :vsplit ~/notes/index.md<CR>
 " }}}
@@ -693,23 +686,6 @@ augroup ft_c
 augroup END
 
 " }}}
-" C#                                                                            {{{
-augroup ft_csharp
-    au!
-    " Async build
-    au FileType cs nnoremap <leader>b :wa!<CR>:OmniSharpBuildAsync<CR>
-    " Update syntastic
-    au BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
-    " Add .cs to proj on save
-    au BufWritePost *.cs call OmniSharp#AddToProject()
-    
-    au FileType cs nnoremap gd :OmniSharpGotoDefinition<CR>
-    au FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<CR>
-    au FileType cs nnoremap <leader>ft :OmniSharpFindType<CR>
-    au FileType cs nnoremap <leader>fs :OmniSharpFindSymbol<CR>
-
-augroup END
-" }}}
 " C++                                                                           {{{
 
 augroup ft_cpp
@@ -734,23 +710,6 @@ augroup ft_haskell
     au BufEnter *.hs compiler ghc
 augroup END
 
-" }}}
-" Lua                                                                           {{{
-au BufReadCmd *.love call zip#Browse(expand("<amatch>"))
-
-function! SetLovePrefs()
-    setlocal dictionary-=~/.vim/love-dictionary/love.dict dictionary+=~/.vim/love-dictionary/love.dict
-    setlocal iskeyword+=.
-endfunction
-
-function! LoveRun()
-    let name=system('echo '.expand("%:r").' | cut -d: -f2')
-    call system('love '.name)
-endfunction
-
-
-autocmd FileType lua call SetLovePrefs()
-autocmd FileType lua nnoremap <F12> :call LoveRun()<CR>
 " }}}
 " Makefle                                                                       {{{
 autocmd FileType make setlocal noexpandtab
