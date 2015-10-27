@@ -1,0 +1,1 @@
+/home/elken/.vimrc
