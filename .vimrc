@@ -186,18 +186,14 @@ Plug 'chrisbra/NrrwRgn'
 Plug 'chrisbra/unicode.vim'
 Plug 'critiqjo/lldb.nvim'
 Plug 'critiqjo/vim-autoclose'
-Plug 'elken/promptline.vim', { 'dir': '~/src/vim/promptline.vim' }
-Plug 'itchyny/calendar.vim' 
-Plug 'jceb/vim-orgmode' 
-Plug 'junegunn/limelight.vim' 
+Plug 'elken/vim-gnome-shell'
 Plug 'junegunn/rainbow_parentheses.vim' 
 Plug 'junegunn/vim-easy-align'
 Plug 'kopischke/unite-spell-suggest'
 Plug 'majutsushi/tagbar'
-Plug 'mattn/gist-vim' 
-Plug 'mattn/webapi-vim' 
 Plug 'mhinz/vim-startify' 
 Plug 'moll/vim-bbye' 
+Plug 'nvie/vim-flake8'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' 
 Plug 'Shougo/echodoc.vim' 
@@ -205,6 +201,8 @@ Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc' , { 'do': 'make'}
 Plug 'simnalamburt/vim-mundo'
 Plug 'terryma/vim-multiple-cursors' 
+Plug 'tell-k/vim-autopep8'
+Plug 'tmhedberg/SimpylFold'
 Plug 'tpope/vim-commentary' 
 Plug 'tpope/vim-dispatch' 
 Plug 'tpope/vim-endwise' 
@@ -221,6 +219,7 @@ Plug 'vhdirk/vim-cmake', { 'for': 'cpp' }
 Plug 'vim-scripts/auto_autoread'
 Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
 Plug 'vim-scripts/greplace.vim' 
+Plug 'vim-scripts/indentpython.vim' 
 Plug 'vim-scripts/SyntaxRange' 
 Plug 'vim-scripts/utl.vim' 
 Plug 'wesQ3/vim-windowswap' 
@@ -255,6 +254,10 @@ match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " }}}
 " Plugin settings                                                               {{{
+" autopep8                                                                      {{{
+let g:autopep8_aggressive = 1
+let g:autopep8_disable_show_diff = 1
+" }}}
 " color_highlight                                                               {{{
 nnoremap <F7> :ColorHighlight<CR>
 " }}}
@@ -326,6 +329,10 @@ let g:startify_bookmarks = [
 " Syntastic                                                                     {{{
 let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
 " }}}
+" SimpylFold                                                                    {{{
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_docstring = 0
+" }}}
 " Tagbar                                                                        {{{
 nnoremap <F9> :TagbarToggle<CR>
 " }}}
@@ -383,10 +390,12 @@ nnoremap <leader>mw Windowswap#EasyWindowSwap
 "let g:ycm_key_list_select_completion=[]
 "let g:ycm_key_list_previous_completion=[]
 
+nnoremap <leader>d :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_register_as_syntastic_checker = 0
+let g:ycm_register_as_syntastic_checker = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_server_log_level = "debug"
 let g:ycm_global_ycm_extra_conf = g:vim_dir . 'bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 "}}}  
@@ -769,10 +778,23 @@ augroup ft_python
 
     au FileType python iabbrev <buffer> afo assert False, "Okay"
 
-    au FileType python set foldmethod=indent
-
     set textwidth=80
     set formatoptions=cq
+    " SimpylFold
+    au BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
+    au BufWinLeave *.py setlocal foldexpr< foldmethod<
+    " Make virtualenvs work
+    py << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
+    au BufWritePost *.py call Flake8() 
+    au BufWritePost *.py call Autopep8()
+
 augroup END
 
 " }}}
