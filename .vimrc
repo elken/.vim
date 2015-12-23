@@ -171,6 +171,13 @@ function! BuildYCM(info)
         !./install.py --clang-completer 
     endif
 endfunction
+
+function! BuildComposer(info)
+  if a:info.status != 'unchanged' || a:info.force
+    !cargo build --release
+    UpdateRemotePlugins
+  endif
+endfunction
 " }}}
 " Options {{{
 let g:plug_window = "bel new"
@@ -186,14 +193,16 @@ Plug 'chrisbra/NrrwRgn'
 Plug 'chrisbra/unicode.vim'
 Plug 'critiqjo/lldb.nvim'
 Plug 'critiqjo/vim-autoclose'
-Plug 'elken/vim-gnome-shell'
+Plug 'euclio/vim-markdown-composer'
 Plug 'junegunn/rainbow_parentheses.vim' 
 Plug 'junegunn/vim-easy-align'
 Plug 'kopischke/unite-spell-suggest'
+Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'majutsushi/tagbar'
 Plug 'mhinz/vim-startify' 
 Plug 'moll/vim-bbye' 
 Plug 'nvie/vim-flake8'
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' 
 Plug 'Shougo/echodoc.vim' 
@@ -202,6 +211,7 @@ Plug 'Shougo/vimproc' , { 'do': 'make'}
 Plug 'simnalamburt/vim-mundo'
 Plug 'terryma/vim-multiple-cursors' 
 Plug 'tell-k/vim-autopep8'
+Plug 'tek/proteome.nvim'
 Plug 'tmhedberg/SimpylFold'
 Plug 'tpope/vim-commentary' 
 Plug 'tpope/vim-dispatch' 
@@ -213,11 +223,13 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-speeddating' 
 Plug 'tpope/vim-surround' 
 Plug 'tpope/vim-vinegar' 
+Plug 'tpope/vim-unimpaired'
 Plug 'tsaleh/vim-align' 
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'vhdirk/vim-cmake', { 'for': 'cpp' }
+Plug 'vimwiki/vimwiki'
+Plug 'vim-scripts/a.vim'
 Plug 'vim-scripts/auto_autoread'
-Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
 Plug 'vim-scripts/greplace.vim' 
 Plug 'vim-scripts/indentpython.vim' 
 Plug 'vim-scripts/SyntaxRange' 
@@ -230,7 +242,7 @@ call plug#end()
 " }}}
 " Color scheme and GUI                                                          {{{
 
-set background=light
+set background=dark
 let g:solarized_termcolors=256
 set t_co=256
 let g:enable_bold_font = 1
@@ -301,7 +313,7 @@ nnoremap <F5> :GundoToggle<CR>
 " }}}
 " NERDTree                                                                      {{{
 nnoremap <F2> :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " }}}
 " Startify                                                                      {{{
 
@@ -397,7 +409,7 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_register_as_syntastic_checker = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_server_log_level = "debug"
-let g:ycm_global_ycm_extra_conf = g:vim_dir . 'bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
 "}}}  
 " }}}
 " Convenience mappings                                                          {{{
@@ -488,6 +500,7 @@ noremap ` <C-^>
 
 " Sudo to write
 cnoremap w!! SudoWrite
+cnoremap e!! SudoEdit
 
 " Typos
 command! -bang E e<bang>
@@ -529,8 +542,8 @@ nnoremap _sh  :set ft=sh<CR>
 " }}}
 " Quick editing                                                                 {{{
 
-nnoremap <leader>ev :vsplit /etc/xdg/nvim/init.vim<cr>
-nnoremap <leader>ey :vsplit /etc/xdg/nvim/init.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<cr>
+nnoremap <leader>ev :vsplit ~/.vimrc<cr>
+nnoremap <leader>ey :vsplit ~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py<cr>
 nnoremap <leader>ez :vsplit ~/.zshrc<CR>
 nnoremap <leader>ew :vsplit ~/notes/index.md<CR>
 " }}}
