@@ -25,7 +25,6 @@ set noscrollbind
 set cmdheight=2
 set noshowmode
 set ambiwidth=single
-set encoding=utf-8
 set modelines=0
 set autoindent
 set showcmd
@@ -201,6 +200,7 @@ Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'majutsushi/tagbar'
 Plug 'mhinz/vim-startify' 
 Plug 'moll/vim-bbye' 
+Plug 'morhetz/gruvbox'
 Plug 'nvie/vim-flake8'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
 Plug 'scrooloose/nerdtree'
@@ -211,8 +211,8 @@ Plug 'Shougo/vimproc' , { 'do': 'make'}
 Plug 'simnalamburt/vim-mundo'
 Plug 'terryma/vim-multiple-cursors' 
 Plug 'tell-k/vim-autopep8'
-Plug 'tek/proteome.nvim'
 Plug 'tmhedberg/SimpylFold'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-commentary' 
 Plug 'tpope/vim-dispatch' 
 Plug 'tpope/vim-endwise' 
@@ -246,7 +246,7 @@ set background=dark
 let g:solarized_termcolors=256
 set t_co=256
 let g:enable_bold_font = 1
-colorscheme solarized
+colorscheme gruvbox
 if has('gui_running')
     set guifont=Hasklig\ 8
     set go-=m
