@@ -187,14 +187,17 @@ Plug 'airblade/vim-gitgutter'
 Plug 'benekastah/neomake'
 Plug 'bling/vim-airline' 
 Plug 'bling/vim-bufferline' 
-Plug 'chrisbra/color_highlight' 
+Plug 'chrisbra/Colorizer'
 Plug 'chrisbra/NrrwRgn' 
 Plug 'chrisbra/unicode.vim'
 Plug 'critiqjo/lldb.nvim'
 Plug 'critiqjo/vim-autoclose'
-Plug 'euclio/vim-markdown-composer'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
+Plug 'junegunn/goyo.vim' 
 Plug 'junegunn/rainbow_parentheses.vim' 
 Plug 'junegunn/vim-easy-align'
+Plug 'godlygeek/tabular'
 Plug 'kopischke/unite-spell-suggest'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'majutsushi/tagbar'
@@ -202,6 +205,7 @@ Plug 'mhinz/vim-startify'
 Plug 'moll/vim-bbye' 
 Plug 'morhetz/gruvbox'
 Plug 'nvie/vim-flake8'
+Plug 'plasticboy/vim-markdown'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' 
@@ -224,10 +228,8 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround' 
 Plug 'tpope/vim-vinegar' 
 Plug 'tpope/vim-unimpaired'
-Plug 'tsaleh/vim-align' 
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 Plug 'vhdirk/vim-cmake', { 'for': 'cpp' }
-Plug 'vimwiki/vimwiki'
 Plug 'vim-scripts/a.vim'
 Plug 'vim-scripts/auto_autoread'
 Plug 'vim-scripts/greplace.vim' 
@@ -296,6 +298,10 @@ nnoremap <leader>H :Gbrowse<cr>
 vnoremap <leader>H :Gbrowse<cr>
 
 " }}}
+" Goyo                                                                          {{{
+nnoremap <leader>gg :Goyo<CR>
+let g:goyo_width = 150
+" }}}
 " Limelight                                                                     {{{
 if &background == "dark"
     let g:limelight_conceal_ctermbg = '240'
@@ -305,6 +311,9 @@ else
     let g:limelight_conceal_ctermfg = 'grey'
 endif
 nnoremap <leader>l :Limelight!!<CR>
+" }}}
+" Markdown composer                                                             {{{
+let g:markdown_composer_browser = "firefox"
 " }}}
 " Mundo                                                                         {{{
 
@@ -755,6 +764,19 @@ augroup ft_markdown
 
     au FileType markdown nnoremap <buffer> <F10> :!pandoc -f markdown --toc % -o %<.pdf<CR>
     au FileType markdown nnoremap <buffer> <S-F10> :! xdg-open %<.pdf 2>&1> /dev/null &<CR><CR>
+    inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
+
+function! s:align()
+  let p = '^\s*|\s.*\s|\s*$'
+  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+    Tabularize/|/l1
+    normal! 0
+    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+  endif
+endfunction
+
 augroup END
 
 " }}}
