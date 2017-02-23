@@ -41,7 +41,7 @@ set laststatus=2
 set history=1000
 set undofile
 set undoreload=10000
-set lazyredraw
+set nolazyredraw
 set matchtime=3
 set showbreak=↪
 set splitbelow
@@ -177,36 +177,30 @@ function! BuildComposer(info)
     UpdateRemotePlugins
   endif
 endfunction
+
 " }}}
 " Options {{{
 let g:plug_window = "bel new"
 let g:plug_quit = "Q"
 "}}}
 
+Plug 'arakashic/chromatica.nvim'
 Plug 'airblade/vim-gitgutter' 
 Plug 'benekastah/neomake'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes' 
 Plug 'bling/vim-bufferline' 
-Plug 'chrisbra/Colorizer'
-Plug 'chrisbra/NrrwRgn' 
 Plug 'chrisbra/unicode.vim'
-Plug 'chrisbra/vim-airline', { 'branch': 'feedkeys'}
 Plug 'critiqjo/lldb.nvim'
 Plug 'critiqjo/vim-autoclose'
-Plug 'dhruvasagar/vim-table-mode'
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
-Plug 'junegunn/goyo.vim' 
 Plug 'junegunn/rainbow_parentheses.vim' 
-Plug 'junegunn/vim-easy-align'
-Plug 'godlygeek/tabular'
 Plug 'ianks/gruvbox'
 Plug 'kopischke/unite-spell-suggest'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'majutsushi/tagbar'
 Plug 'mhinz/vim-startify' 
 Plug 'moll/vim-bbye' 
-Plug 'nvie/vim-flake8'
-Plug 'plasticboy/vim-markdown'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic' 
@@ -215,9 +209,7 @@ Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc' , { 'do': 'make'}
 Plug 'simnalamburt/vim-mundo'
 Plug 'terryma/vim-multiple-cursors' 
-Plug 'tell-k/vim-autopep8'
 Plug 'tmhedberg/SimpylFold'
-Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-commentary' 
 Plug 'tpope/vim-dispatch' 
 Plug 'tpope/vim-endwise' 
@@ -237,7 +229,6 @@ Plug 'vim-scripts/greplace.vim'
 Plug 'vim-scripts/indentpython.vim' 
 Plug 'vim-scripts/SyntaxRange' 
 Plug 'vim-scripts/utl.vim' 
-Plug 'wesQ3/vim-windowswap' 
 Plug 'Xuyuanp/nerdtree-git-plugin' 
 
 call plug#end()
@@ -251,7 +242,7 @@ set t_co=256
 let g:enable_bold_font = 1
 colorscheme gruvbox
 if has('gui_running')
-    set guifont=Hasklig\ 8
+    set guifont=Hasklig:h14
     set go-=m
     set go-=T
     set go-=r
@@ -275,6 +266,9 @@ let g:autopep8_disable_show_diff = 1
 " }}}
 " color_highlight                                                               {{{
 nnoremap <F7> :ColorHighlight<CR>
+" }}}
+" Chromatica                                                                    {{{
+let g:chromatica#libclang_path='/usr/local/opt/llvm/lib'
 " }}}
 " Fugitive                                                                      {{{
 
@@ -324,6 +318,9 @@ nnoremap <F5> :GundoToggle<CR>
 " NERDTree                                                                      {{{
 nnoremap <F2> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" }}}
+" Rust                                                                          {{{
+let g:rustfmt_autosave = 1
 " }}}
 " Startify                                                                      {{{
 
@@ -420,6 +417,7 @@ let g:ycm_register_as_syntastic_checker = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_server_log_level = "debug"
 let g:ycm_confirm_extra_conf = 0
+let g:ycm_rust_src_path = "/home/elken/build/rust-master/src"
 "}}}  
 " }}}
 " Convenience mappings                                                          {{{
@@ -819,17 +817,8 @@ augroup ft_python
     " SimpylFold
     au BufWinEnter *.py setlocal foldexpr=SimpylFold(v:lnum) foldmethod=expr
     au BufWinLeave *.py setlocal foldexpr< foldmethod<
-    " Make virtualenvs work
-    py << EOF
-import os
-import sys
-if 'VIRTUAL_ENV' in os.environ:
-  project_base_dir = os.environ['VIRTUAL_ENV']
-  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-  execfile(activate_this, dict(__file__=activate_this))
-EOF
-    au BufWritePost *.py call Flake8() 
-    au BufWritePost *.py call Autopep8()
+    " au BufWritePost *.py call Flake8() 
+    " au BufWritePost *.py call Autopep8()
 
 augroup END
 
@@ -1007,6 +996,7 @@ endfunction
 " }}}
 " nvim stuff                                                                    {{{
 if has('nvim')
+    let g:python_host_prog = "~/.pyenv/shims/python2"
     tnoremap <Esc> <C-\><C-n>
     tnoremap <C-h> <C-\><C-n><C-w>h
     tnoremap <C-j> <C-\><C-n><C-w>j
