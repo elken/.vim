@@ -757,6 +757,7 @@ augroup END
 
 augroup ft_markdown
     au!
+    set spell
 
     au BufNewFile,BufRead *.m*down setlocal filetype=markdown foldlevel=1
     au BufNewFile,BufRead *.md setlocal filetype=markdown foldlevel=1
