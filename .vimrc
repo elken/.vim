@@ -195,7 +195,7 @@ Plug 'critiqjo/lldb.nvim'
 Plug 'critiqjo/vim-autoclose'
 Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 Plug 'junegunn/rainbow_parentheses.vim' 
-Plug 'ianks/gruvbox'
+Plug 'morhetz/gruvbox'
 Plug 'kopischke/unite-spell-suggest'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'majutsushi/tagbar'
@@ -237,10 +237,11 @@ call plug#end()
 " Color scheme and GUI                                                          {{{
 
 set background=dark
+colorscheme gruvbox
+
 let g:solarized_termcolors=256
 set t_co=256
 let g:enable_bold_font = 1
-colorscheme gruvbox
 if has('gui_running')
     set guifont=Hasklig:h14
     set go-=m
@@ -996,7 +997,6 @@ endfunction
 " }}}
 " nvim stuff                                                                    {{{
 if has('nvim')
-    let g:python_host_prog = "~/.pyenv/shims/python2"
     tnoremap <Esc> <C-\><C-n>
     tnoremap <C-h> <C-\><C-n><C-w>h
     tnoremap <C-j> <C-\><C-n><C-w>j
